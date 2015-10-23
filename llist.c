@@ -6,6 +6,7 @@
 struct Element{
 	TYPE_VARIABLE valeur;
 	struct Element *nxt;
+	struct Element *now;
 	struct Element *pre;
 };
 struct Llist{
@@ -17,6 +18,7 @@ Llist *ll_initialisation(){
 
 	ll_secuList(list);
 	list->first = NULL;
+	list->size = 0;
 
 	return list;
 }
@@ -25,6 +27,7 @@ Llist *ll_initialisationNbr(int nbr, TYPE_VARIABLE valeur){
 
 	ll_secuList(list);
 	list->first = NULL;
+	list->size = 0;
 
 	for(int a = 0; a < nbr; a++){
 		ll_addStart(list, valeur);
@@ -34,13 +37,16 @@ Llist *ll_initialisationNbr(int nbr, TYPE_VARIABLE valeur){
 void ll_addStart(Llist *list, TYPE_VARIABLE variable ){
 	ll_secuList(list);
 
-	Element *new = malloc(sizeof(Element));
-	ll_secuElement(new);
+	Element *add = malloc(sizeof(Element));
+	ll_secuElement(add);
 
-	new->valeur = variable;
-	new->nxt = list->first;
-	new->pre = NULL;
-	list->first = new;
+	add->valeur = variable;
+	add->nxt = list->first;
+	add->now = add;
+	add->pre = NULL;
+
+	list->first = add;
+	list->size++;
 }
 void ll_addElement(Llist *list, TYPE_VARIABLE val, int pos){
 	ll_secuList(list);
@@ -55,15 +61,22 @@ void ll_addElement(Llist *list, TYPE_VARIABLE val, int pos){
 	Element *res = list->first;
 
 	pos--;
+	Element *pre = NULL;
+
 	for(int a = 0; a < pos && res != NULL; a++){
 		res = res->nxt;
 	}
+	add->pre = res->now;
+	add->now = add;
 	add->nxt = res->nxt;
-	res->nxt = add;
+	add->nxt->pre = add;
+	
+	res->nxt->pre = res->now;
+
+	list->size++;
 }
 void ll_add(Llist *list, int nbr, ...){
 	ll_secuList(list);
-	
 	va_list ad;
 	va_start(ad, nbr);
 
@@ -79,24 +92,31 @@ void ll_add(Llist *list, int nbr, ...){
 	}
 
 	
-	
+	Element *res = NULL;
 	for(int a = 0; a <= nbr && temp != NULL; a++){
-		
-		Element *element = malloc(sizeof(*element));
-		ll_secuElement(element);
+		res = temp->nxt;
+		Element *add = malloc(sizeof(Element));
+		ll_secuElement(add);
 
 		TYPE_VARIABLE vale = va_arg(ad, TYPE_VARIABLE);
 
-		element->valeur = vale;
-		element->nxt = temp;
-		if(a == nbr)
+		add->valeur = vale;
+		add->nxt = res;
+		add->now = add;
+		add->pre = temp->now;
+
+		if(a == nbr){
 			temp->nxt = NULL;
-		else
-			temp->nxt = element;
+		}
+		else{
+			temp->nxt = add;
+		}
+
 		temp = temp->nxt;
 	}
 
 	va_end(ad);
+	list->size += nbr;
 }
 void ll_removValeur(Llist *list, TYPE_VARIABLE val){
 	ll_secuList(list);
@@ -107,6 +127,7 @@ void ll_removValeur(Llist *list, TYPE_VARIABLE val){
 		Element *remov = list->first;
 		list->first = list->first->nxt;
 		free(remov);
+		list->size--;
 		return;
 	}
 
@@ -115,12 +136,14 @@ void ll_removValeur(Llist *list, TYPE_VARIABLE val){
 		back->nxt = NULL;
 		Element *remov = ll_containt(list, pos);
 		free(remov);
+		list->size--;
 		return;
 	}
 	else{
 		Element *remov = ll_containt(list, pos);
 		back->nxt = remov->nxt;
 		free(remov);
+		list->size--;
 		return;
 	}
 }
@@ -170,14 +193,7 @@ int ll_size(Llist *list){
 	if(list == NULL)
 		return 0;
 	
-	int i = 0;
-	Element *element = list->first;
-	while(element != NULL){
-		element = element->nxt;
-		i++;
-	}
-
-	return i;
+	return list->size;
 }
 void ll_toString(Llist *list){
 	ll_secuList(list);
@@ -193,13 +209,14 @@ void ll_toString(Llist *list){
 }
 void ll_toStringDet(Llist *list){
 	ll_secuList(list);
-
+	printf("\n********************************************************************************************\n");
 	Element *element = list->first;
 	printf("Il y a %d d'element\nMemoire de la liste : %d\n", list->size, list);
-
+	int i = 0;
 	while(element != NULL){
-		printf("-{Valeur : %d, Avant : %d, Apres : %d}-",element->valeur, element->pre, element->nxt);
-		element->element->nxt;
+		printf("[%d]-{Valeur : %d, Avant : %d, Now : %d, Apres : %d}-\n",i, element->valeur, element->pre, element->now, element->nxt);
+		element = element->nxt;
+		i++;
 	}
 	printf("\n");
 }

@@ -23,5 +23,6 @@ void ll_secuList(Llist *list); //Exit si la list est null
 void ll_secuElement(Element *element); //Exit si l'élément est null
 void ll_setElement(Llist *list, TYPE_VARIABLE valeur, int pos); //Modifier une valeur à la position voulue
 void ll_toString(Llist *list); //Ecrit la liste
+void ll_toStringDet(Llist *list); //Ecrit la liste en détaille
 Llist *ll_transTab(TYPE_VARIABLE valeur[], int nbr); //Transforme un tableau en liste
 void ll_tri(Llist *list); //Tri les valeurs d'une liste
