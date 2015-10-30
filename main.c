@@ -9,6 +9,7 @@ void main(){
 	ll_toString(list);
 	ll_addElement(list, 10, 3);
 	ll_addEnd(list, 8);
+	ll_addStart(list, 0);
 	ll_tri(list);
 	ll_toStringDet(list);
 

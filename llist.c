@@ -8,6 +8,7 @@ struct Element{
 	struct Element *nxt;
 	struct Element *now;
 	struct Element *pre;
+	struct Llist *list;
 };
 struct Llist{
 	int size;
@@ -29,13 +30,14 @@ Llist *ll_initialisationNbr(int nbr, TYPE_VARIABLE valeur){
 	ll_secuList(list);
 	list->first = NULL;
 	list->size = 0;
+	list->last = NULL;
 
 	for(int a = 0; a < nbr; a++){
 		ll_addStart(list, valeur);
 	}
 	return list;
 }
-void ll_addStart(Llist *list, TYPE_VARIABLE variable ){
+void ll_addStart(Llist *list, TYPE_VARIABLE variable){
 	ll_secuList(list);
 
 	Element *add = malloc(sizeof(Element));
@@ -46,6 +48,12 @@ void ll_addStart(Llist *list, TYPE_VARIABLE variable ){
 	add->now = add;
 	add->pre = NULL;
 
+	if(list->last == NULL){
+		list->last = add;
+	}
+	if(list->first != NULL){
+		list->first->pre = add;
+	}
 	list->first = add;
 	list->size++;
 }
