@@ -2,10 +2,11 @@ typedef struct Element Element;
 typedef struct Llist Llist;
 #define TYPE_VARIABLE int
 
-void ll_addStart(Llist *list, TYPE_VARIABLE variable); //Rajoute une valeur à la fin de la liste
+void ll_addStart(Llist *list, TYPE_VARIABLE variable); //Rajoute une valeur au début de la liste
 void ll_addElement(Llist *list, TYPE_VARIABLE valeur, int pos); //Rajoute une valeur à une position
 void ll_add(Llist *list, int nbr, ...); //Rajoute plusieurs valeurs à la fin de la liste
 void ll_addList(Llist *list, Llist *list2); //Rassemble 2 listes en 1 seule
+void ll_addEnd(Llist *list, TYPE_VARIABLE valeur); //Rajoute une valeur à la fin de la liste;
 Element *ll_containt(Llist *list, int pos); //Renvoie une valeur selon la position
 Llist *ll_clone(Llist *list, ...); //Copi un fragment d'une liste dans une nouvelle liste. Optionnel : {int start, int end};
 void ll_fill(Llist *list, TYPE_VARIABLE valeur); //Remplit tout la liste d'une seul valeur

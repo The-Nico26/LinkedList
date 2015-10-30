@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h> 
+#include <stdarg.h>
 #include "llist.h"
 
 struct Element{
@@ -12,6 +12,7 @@ struct Element{
 struct Llist{
 	int size;
 	Element *first;
+	Element *last;
 };
 Llist *ll_initialisation(){
 	Llist *list = malloc(sizeof(Llist));
@@ -48,9 +49,24 @@ void ll_addStart(Llist *list, TYPE_VARIABLE variable ){
 	list->first = add;
 	list->size++;
 }
+void ll_addEnd(Llist *list, TYPE_VARIABLE variable){
+	ll_secuList(list);
+
+	Element *add = malloc(sizeof(Element));
+	ll_secuElement(add);
+
+	add->valeur = variable;
+	add->nxt = NULL;
+	add->now = add;
+	add->pre = list->last;
+
+	list->last->nxt = add;
+	list->last = add;
+	list->size++;
+}
 void ll_addElement(Llist *list, TYPE_VARIABLE val, int pos){
 	ll_secuList(list);
-	if(pos > ll_size(list)){
+	if(pos >= list->size){
 		return;
 	}
 
@@ -61,8 +77,6 @@ void ll_addElement(Llist *list, TYPE_VARIABLE val, int pos){
 	Element *res = list->first;
 
 	pos--;
-	Element *pre = NULL;
-
 	for(int a = 0; a < pos && res != NULL; a++){
 		res = res->nxt;
 	}
@@ -70,9 +84,12 @@ void ll_addElement(Llist *list, TYPE_VARIABLE val, int pos){
 	add->now = add;
 	add->nxt = res->nxt;
 	add->nxt->pre = add;
-	
+	res->nxt = add;
 	res->nxt->pre = res->now;
 
+	if(list->size == pos++){
+		list->last = add;
+	}
 	list->size++;
 }
 void ll_add(Llist *list, int nbr, ...){
@@ -86,12 +103,12 @@ void ll_add(Llist *list, int nbr, ...){
 	}
 
 	Element *temp = list->first;
-	
+
 	while(temp->nxt != NULL){
 		temp = temp->nxt;
 	}
 
-	
+
 	Element *res = NULL;
 	for(int a = 0; a <= nbr && temp != NULL; a++){
 		res = temp->nxt;
@@ -107,6 +124,7 @@ void ll_add(Llist *list, int nbr, ...){
 
 		if(a == nbr){
 			temp->nxt = NULL;
+			list->last = temp;
 		}
 		else{
 			temp->nxt = add;
@@ -150,7 +168,6 @@ void ll_removValeur(Llist *list, TYPE_VARIABLE val){
 void ll_removIndex(Llist *list, int pos){
 	ll_secuList(list);
 	Element *element = ll_containt(list, pos);
-
 	ll_removValeur(list, element->valeur);
 }
 void ll_removeAll(Llist *list){
@@ -192,7 +209,7 @@ Element *ll_containt(Llist *list, int pos){
 int ll_size(Llist *list){
 	if(list == NULL)
 		return 0;
-	
+
 	return list->size;
 }
 void ll_toString(Llist *list){
@@ -211,14 +228,14 @@ void ll_toStringDet(Llist *list){
 	ll_secuList(list);
 	printf("\n********************************************************************************************\n");
 	Element *element = list->first;
-	printf("Il y a %d d'element\nMemoire de la liste : %d\n", list->size, list);
+	printf("Il y a %d d'element\nMemoire de la liste : %d\nTaille de la liste : %d octets\n", list->size, list, (list->size*sizeof(Element)));
 	int i = 0;
 	while(element != NULL){
 		printf("[%d]-{Valeur : %d, Avant : %d, Now : %d, Apres : %d}-\n",i, element->valeur, element->pre, element->now, element->nxt);
 		element = element->nxt;
 		i++;
 	}
-	printf("\n");
+	printf("\nLe dernier element est : %d\n********************************************************************************************\n", list->last);
 }
 void ll_secuList(Llist *list){
 	if(list == NULL){
@@ -242,7 +259,7 @@ Llist *ll_clone(Llist *list, ...){
 	Llist *copy = ll_initialisation();
 
 	ll_secuList(copy);
-	
+
 	va_list ap;
 	va_start(ap, list);
 		int start = va_arg(ap, int);
@@ -285,7 +302,7 @@ Llist *ll_reverse(Llist *list){
 	return save;
 }
 void ll_addList(Llist *list, Llist *list2){
-	ll_secuList(list); 
+	ll_secuList(list);
 	ll_secuList(list2);
 	int lastIndex = ll_size(list);
 
@@ -302,11 +319,9 @@ void ll_tri(Llist *list){
 	while(flag){
 		flag = 0;
 		i = 0;
-		int size = ll_size(list);
-		while (i <  size - 1){
+		while (i <  list->size - 1){
 			Element *element1 = ll_containt(list, i);
-			Element *element2 = ll_containt(list, i + 1);
-
+			Element *element2 = element1->nxt;
 			if(element1->valeur > element2->valeur){
 
 				TYPE_VARIABLE c = element1->valeur;
