@@ -29,3 +29,4 @@ void ll_toString(Llist *list); //Ecrit la liste
 void ll_toStringDet(Llist *list); //Ecrit la liste en détaille
 Llist *ll_transTab(TYPE_VARIABLE valeur[], int nbr); //Transforme un tableau en liste
 void ll_tri(Llist *list); //Tri les valeurs d'une liste
+void ll_struct(Element *element); //Permet d'afficher chaque structure de la liste chainé

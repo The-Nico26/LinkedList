@@ -11,9 +11,8 @@ void main(){
 
 	ll_add(list2, 5, 6, 7, 2, 4, 0);
 	ll_setList(list, list2, 2);
-	ll_toStringDet(list);
-
-
+	ll_toStringDet(list2);
+	//ll_toStringDet(list);
 
 	ll_removeAll(list);
 }

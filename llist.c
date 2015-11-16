@@ -48,6 +48,7 @@ void ll_addStart(Llist *list, TYPE_VARIABLE variable){
 	add->nxt = list->first;
 	add->now = add;
 	add->pre = NULL;
+	add->llist = NULL;
 
 	if(list->last == NULL){
 		list->last = add;
@@ -68,6 +69,7 @@ void ll_addEnd(Llist *list, TYPE_VARIABLE variable){
 	add->nxt = NULL;
 	add->now = add;
 	add->pre = list->last;
+	add->llist = NULL;
 
 	list->last->nxt = add;
 	list->last = add;
@@ -93,6 +95,8 @@ void ll_addElement(Llist *list, TYPE_VARIABLE val, int pos){
 	add->now = add;
 	add->nxt = res->nxt;
 	add->nxt->pre = add;
+	add->llist = NULL;
+
 	res->nxt = add;
 	res->nxt->pre = res->now;
 
@@ -129,6 +133,7 @@ void ll_add(Llist *list, int nbr, ...){
 		add->valeur = vale;
 		add->nxt = res;
 		add->now = add;
+		add->llist = NULL;
 		add->pre = temp->now;
 
 		if(a == nbr){
@@ -238,16 +243,22 @@ void ll_toStringDet(Llist *list){
 	printf("\n********************************************************************************************\n");
 	Element *element = list->first;
 	printf("Il y a %d d'element\nMemoire de la liste : %d\nTaille de la liste : %d octets\nChaque element : %d octects\n", list->size, list, (list->size*sizeof(Element)), sizeof(Element));
-	int i = 0;
-	while(element != NULL){
-		printf("[%d.%d]-{Valeur : %d, Avant : %d, Now : %d, Apres : %d}-\n",list->dimension,i, element->valeur, element->pre, element->now, element->nxt);
-		if(element->llist != NULL){
-			ll_toStringDet(element->llist);
-		}
-		element = element->nxt;
-		i++;
-	}
+	ll_struct(element, list->dimension);
 	printf("\nLe premier element est : %d\nLe dernier element est : %d\n********************************************************************************************\n", list->first, list->last);
+}
+void ll_struct(Element *element, int dimension){
+		int i = 0;
+		while(element != NULL){
+			for(int a = 0; a < dimension; a++){
+				printf("\t");
+			}
+			printf("[%d.%d]-{Valeur : %d, Avant : %d, Now : %d, Apres : %d, List : %d}-\n",list->dimension, i, element->valeur, element->pre, element->now, element->nxt, element->llist);
+			if(element->llist != NULL){
+				ll_toStringDet(element->llist);
+			}
+			element = element->nxt;
+			i++;
+		}
 }
 void ll_secuList(Llist *list){
 	if(list == NULL){
@@ -383,6 +394,7 @@ Llist *ll_getLlist(Llist *list, int dimension, ...){
 }
 void ll_setList(Llist *list, Llist *list2, int pos){
 	ll_secuList(list);
+	ll_secuList(list2);
 	Element *element = ll_containt(list, pos);
 	element->llist = list2;
 	element->llist->dimension = list->dimension + 1;
