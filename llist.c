@@ -12,7 +12,6 @@ struct Element{
 };
 struct Llist{
 	int size;
-	int dimension;
 	Element *first;
 	Element *last;
 };
@@ -221,23 +220,28 @@ void ll_toString(Llist *list){
 void ll_toStringDet(Llist *list){
 	ll_secuList(list);
 	printf("\n********************************************************************************************\n");
-	Element *element = list->first;
-	printf("Il y a %d d'element\nMemoire de la liste : %d\nTaille de la liste : %d octets\nChaque element : %d octects\n", list->size, list, (list->size*sizeof(Element)), sizeof(Element));
+	printf("Il y a %d d'element\nMemoire de la liste : %d\nChaque element : %d octects\n", list->size, list, (list->size*sizeof(Element)), sizeof(Element));
 	int dimension = 0;
-	ll_struct(element, dimension);
-	printf("\nLe premier element est : %d\nLe dernier element est : %d\n********************************************************************************************\n", list->first, list->last);
+	int size = sizeof(Llist);
+	int *psize = &size;
+	ll_struct(list, dimension, psize);
+	printf("\nLe premier element est : %d\nLe dernier element est : %d\nTaille de la liste : %d octets\n********************************************************************************************\n", list->first, list->last, size);
 }
 
-void ll_struct(Element *element, int dimension){
+void ll_struct(Llist *list, int dimension, int *size){
 		int i = 0;
+		Element *element = list->first;
+		*size += sizeof(Llist);
 		while(element != NULL){
 			for(int a = 0; a < dimension; a++){
-				printf("\t", dimension);
+				printf("\t");
 			}
+			*size += sizeof(Element);
 			printf("[%d.%d]-{Valeur : %d, Avant : %d, Now : %d, Apres : %d, List : %d}-\n",dimension, i, element->valeur, element->pre, element->now, element->nxt, element->llist);
 			if(element->llist != NULL){
 				dimension++;
-				ll_struct(element->llist->first, dimension);
+				ll_struct(element->llist, dimension, size);
+				dimension--;
 			}
 			element = element->nxt;
 			i++;
@@ -377,5 +381,4 @@ void ll_setList(Llist *list, Llist *list2, int pos){
 	ll_secuList(list2);
 	Element *element = ll_containt(list, pos);
 	element->llist = list2;
-	element->llist->dimension = list->dimension + 1;
 }
