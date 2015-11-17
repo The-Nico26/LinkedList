@@ -15,7 +15,7 @@ void main(){
 	Llist *list3 = ll_initialisation();
 
 	ll_add(list3, 6, 2, 8, 9, 6, 8, 0);
-	ll_setList(list3, list, 3);
+	ll_setList(list3, list, 2);
 
 	ll_toStringDet(list3);
 

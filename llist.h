@@ -25,7 +25,7 @@ void ll_secuList(Llist *list); //Exit si la list est null
 void ll_secuElement(Element *element); //Exit si l'élément est null
 void ll_setElement(Llist *list, TYPE_VARIABLE valeur, int pos); //Modifier une valeur à la position voulue
 void ll_setList(Llist *list, Llist *list2, int pos);
-void ll_struct(Llist *list, int dimension, int *size); //Permet d'afficher chaque structure de la liste chainé
+void ll_struct(Element *element, int dimension); //Permet d'afficher chaque structure de la liste chainé
 void ll_toString(Llist *list); //Ecrit la liste
 void ll_toStringDet(Llist *list); //Ecrit la liste en détaille
 Llist *ll_transTab(TYPE_VARIABLE valeur[], int nbr); //Transforme un tableau en liste
